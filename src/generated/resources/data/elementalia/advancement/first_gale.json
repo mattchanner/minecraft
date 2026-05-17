@@ -1,0 +1,33 @@
+{
+  "parent": "elementalia:first_quake",
+  "criteria": {
+    "has_breeze_rod": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:breeze_rod"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.elementalia.first_gale.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "elementalia:wind_book"
+    },
+    "title": {
+      "translate": "advancements.elementalia.first_gale.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_breeze_rod"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

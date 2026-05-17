@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:amethyst_cluster",
+    "D": "minecraft:deepslate",
+    "K": "minecraft:book",
+    "L": "minecraft:leather"
+  },
+  "pattern": [
+    "DAD",
+    "LKL",
+    "DAD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "elementalia:earth_book"
+  }
+}

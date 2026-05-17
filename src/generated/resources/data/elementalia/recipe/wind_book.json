@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:breeze_rod",
+    "F": "minecraft:feather",
+    "K": "minecraft:book",
+    "L": "minecraft:leather"
+  },
+  "pattern": [
+    "FBF",
+    "LKL",
+    "FBF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "elementalia:wind_book"
+  }
+}

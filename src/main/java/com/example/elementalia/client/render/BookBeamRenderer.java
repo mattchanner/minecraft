@@ -27,14 +27,9 @@ import org.joml.Vector3f;
  */
 public class BookBeamRenderer extends EntityRenderer<BookBeamEntity, BookBeamRenderState> {
 
-    /** Reuse the vanilla beacon texture for v1 — replace with a custom fire strip later. */
+    /** Reuse the vanilla beacon texture for v1 — replace with custom per-element strips later. */
     private static final ResourceLocation BEAM_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/entity/beacon_beam.png");
-
-    /** Base orange/fire RGB components (used to build the ARGB int each frame). */
-    private static final float BASE_R = 1.0f;
-    private static final float BASE_G = 0.5f;
-    private static final float BASE_B = 0.1f;
 
     public BookBeamRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -56,6 +51,7 @@ public class BookBeamRenderer extends EntityRenderer<BookBeamEntity, BookBeamRen
         state.lifetime    = entity.getLifetime();
         state.gameTime    = entity.level().getGameTime();
         state.partialTick = partialTick;
+        state.element     = entity.getElement();
     }
 
     // --- rendering ---
@@ -67,14 +63,18 @@ public class BookBeamRenderer extends EntityRenderer<BookBeamEntity, BookBeamRen
         float length = (float) diff.length();
         if (length < 0.01f) return;
 
-        // Fade from full brightness (orange) to black over the beam's lifetime.
+        // Fade from full brightness to black over the beam's lifetime.
         float fade = state.lifetime > 0
                 ? Math.max(0f, 1.0f - (state.ageInTicks / (float) state.lifetime))
                 : 1.0f;
         if (fade < 0.01f) return;
 
-        // Pack as ARGB int; scale RGB by fade to darken as the beam dies.
-        int color = ARGB.colorFromFloat(1.0f, BASE_R * fade, BASE_G * fade, BASE_B * fade);
+        // Element-specific base color, scaled by fade to darken as the beam dies.
+        int   baseArgb = state.element.beamColorArgb();
+        float baseR    = ARGB.red(baseArgb)   / 255f;
+        float baseG    = ARGB.green(baseArgb) / 255f;
+        float baseB    = ARGB.blue(baseArgb)  / 255f;
+        int   color    = ARGB.colorFromFloat(1.0f, baseR * fade, baseG * fade, baseB * fade);
 
         // Build a rotation quaternion: model-Y (0,1,0) → beam direction.
         Vector3f dir = new Vector3f((float) diff.x, (float) diff.y, (float) diff.z).normalize();

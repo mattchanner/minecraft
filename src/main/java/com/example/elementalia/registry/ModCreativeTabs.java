@@ -19,6 +19,10 @@ public class ModCreativeTabs {
                     .icon(() -> ModItems.FIRE_BOOK.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.FIRE_BOOK.get());
+                        output.accept(ModItems.ICE_BOOK.get());
+                        output.accept(ModItems.EARTH_BOOK.get());
+                        output.accept(ModItems.WIND_BOOK.get());
+                        output.accept(ModBlocks.TOME_RITUAL_ITEM.get());
                     })
                     .build());
 

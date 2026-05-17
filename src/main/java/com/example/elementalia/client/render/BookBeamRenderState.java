@@ -1,5 +1,6 @@
 package com.example.elementalia.client.render;
 
+import com.example.elementalia.element.Element;
 import com.example.elementalia.entity.BookBeamEntity;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.phys.Vec3;
@@ -27,4 +28,7 @@ public class BookBeamRenderState extends EntityRenderState {
 
     /** Raw partial-tick value — used for sub-tick smooth animation. */
     public float partialTick = 0f;
+
+    /** Element flavour the beam carries — drives the base ARGB color. */
+    public Element element = Element.FIRE;
 }

@@ -1,2 +1,6 @@
-// 1.21.4	2026-05-17T15:51:58.8091054	Model Definitions - elementalia
+// 1.21.4	2026-05-17T19:43:20.2265108	Model Definitions - elementalia
+b2be440ccc2b0dac95d32ad9179344b41e6f7104 assets/elementalia/items/earth_book.json
 f16f6bd35c1a5c24b07ad610deb034c97b61214e assets/elementalia/items/fire_book.json
+e161e6582fd28f2d9965adce6a8a207ff132e1fe assets/elementalia/items/ice_book.json
+2cc6fc47fc1cd1de67b50ee9012b7c1f5a9af83c assets/elementalia/items/tome_ritual.json
+e92d635426a5bcfa44d7cd44014bb3195131785c assets/elementalia/items/wind_book.json

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "K": "minecraft:book",
+    "L": "minecraft:leather",
+    "P": "minecraft:packed_ice",
+    "S": "minecraft:powder_snow_bucket"
+  },
+  "pattern": [
+    "PSP",
+    "LKL",
+    "PSP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "elementalia:ice_book"
+  }
+}

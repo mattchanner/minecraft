@@ -20,7 +20,7 @@ A NeoForge 1.21.4 mod that adds an **Elemental Fire Book** — right-click to fi
 | 05 | [Gameplay effects](phase-05-gameplay-effects.md) | Done |
 | 06 | [Polish v1](phase-06-polish-v1.md) | Done |
 | 07 | [Upgrade to beacon-style beam](phase-07-upgrade-to-beacon-beam.md) | Done |
-| 08 | [Stretch — elemental family](phase-08-stretch-elemental-family.md) | Not started |
+| 08 | [Stretch — elemental family](phase-08-stretch-elemental-family.md) | Done (polish items deferred — see phase file) |
 
 Tick boxes inside each phase file as work is completed. When all boxes in a phase are ticked, change its status above to **Done**.
 

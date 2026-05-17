@@ -1,0 +1,33 @@
+{
+  "parent": "elementalia:first_burn",
+  "criteria": {
+    "has_powder_snow_bucket": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:powder_snow_bucket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.elementalia.first_frost.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "elementalia:ice_book"
+    },
+    "title": {
+      "translate": "advancements.elementalia.first_frost.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_powder_snow_bucket"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

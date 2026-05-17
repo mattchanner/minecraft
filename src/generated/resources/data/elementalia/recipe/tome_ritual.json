@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "K": "minecraft:book",
+    "O": "minecraft:obsidian"
+  },
+  "pattern": [
+    "OOO",
+    "OKO",
+    "OOO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "elementalia:tome_ritual"
+  }
+}

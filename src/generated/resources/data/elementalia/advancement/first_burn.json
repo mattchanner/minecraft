@@ -1,4 +1,5 @@
 {
+  "parent": "elementalia:root",
   "criteria": {
     "has_fire_book": {
       "conditions": {
@@ -12,7 +13,6 @@
     }
   },
   "display": {
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancements.elementalia.first_burn.description"
     },

@@ -1,3 +1,11 @@
-// 1.21.4	2026-05-17T15:23:08.31692	Elementalia Recipes
+// 1.21.4	2026-05-17T19:43:20.227509	Elementalia Recipes
+a690a0ef69b6d06eb5638493f0fe34e6e8e36c79 data/elementalia/advancement/recipes/misc/earth_book.json
 7213b283214bc0622bf4c67ad51561e131738aef data/elementalia/advancement/recipes/misc/fire_book.json
+4390af89d33ec771412cee93ab4632a0c38afbc5 data/elementalia/advancement/recipes/misc/ice_book.json
+4a35bc6fd15b0bb58d21edd5a76b1cb75c535fae data/elementalia/advancement/recipes/misc/tome_ritual.json
+7f5eb0e5f283c542857000a393cc018c72703a5c data/elementalia/advancement/recipes/misc/wind_book.json
+c4ac28dbe9f29a9fb2fa6258e9607719ebb47969 data/elementalia/recipe/earth_book.json
 64a6e3f73d440b141a39942b7da4d395b4bf568e data/elementalia/recipe/fire_book.json
+2b1f8153eec9c26502b67523f9e727ff6165afe8 data/elementalia/recipe/ice_book.json
+8f895c943a005cb9ae5083573e0d764356defcb9 data/elementalia/recipe/tome_ritual.json
+7b227452321b6251378c1946601d3920c452ddbd data/elementalia/recipe/wind_book.json

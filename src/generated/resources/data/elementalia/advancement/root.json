@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "has_any_tome": {
+      "conditions": {
+        "items": [
+          {
+            "items": "elementalia:fire_book"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.elementalia.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "elementalia:fire_book"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.elementalia.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_any_tome"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

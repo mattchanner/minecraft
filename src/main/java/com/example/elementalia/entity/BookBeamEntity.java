@@ -1,5 +1,6 @@
 package com.example.elementalia.entity;
 
+import com.example.elementalia.element.Element;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,6 +31,8 @@ public class BookBeamEntity extends Entity {
             SynchedEntityData.defineId(BookBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFETIME =
             SynchedEntityData.defineId(BookBeamEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Byte> ELEMENT =
+            SynchedEntityData.defineId(BookBeamEntity.class, EntityDataSerializers.BYTE);
 
     public static final int DEFAULT_LIFETIME = 12; // ticks (~0.6 s)
 
@@ -45,6 +48,7 @@ public class BookBeamEntity extends Entity {
         builder.define(END_Y, 0.0f);
         builder.define(END_Z, 0.0f);
         builder.define(LIFETIME, DEFAULT_LIFETIME);
+        builder.define(ELEMENT, Element.FIRE.toByte());
     }
 
     // --- public API used by FireBookItem and BookBeamRenderer ---
@@ -70,6 +74,14 @@ public class BookBeamEntity extends Entity {
 
     public int getLifetime() {
         return entityData.get(LIFETIME);
+    }
+
+    public void setElement(Element element) {
+        entityData.set(ELEMENT, element.toByte());
+    }
+
+    public Element getElement() {
+        return Element.fromByte(entityData.get(ELEMENT));
     }
 
     // --- Entity overrides ---
@@ -121,6 +133,8 @@ public class BookBeamEntity extends Entity {
         entityData.set(END_Y, tag.getFloat("EndY"));
         entityData.set(END_Z, tag.getFloat("EndZ"));
         entityData.set(LIFETIME, tag.getInt("Lifetime"));
+        // Older saves (Phase 06/07) lack an Element tag — default to FIRE.
+        entityData.set(ELEMENT, tag.contains("Element") ? tag.getByte("Element") : Element.FIRE.toByte());
     }
 
     @Override
@@ -129,5 +143,6 @@ public class BookBeamEntity extends Entity {
         tag.putFloat("EndY", entityData.get(END_Y));
         tag.putFloat("EndZ", entityData.get(END_Z));
         tag.putInt("Lifetime", entityData.get(LIFETIME));
+        tag.putByte("Element", entityData.get(ELEMENT));
     }
 }

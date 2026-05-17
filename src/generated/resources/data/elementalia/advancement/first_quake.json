@@ -1,0 +1,33 @@
+{
+  "parent": "elementalia:first_burn",
+  "criteria": {
+    "has_deepslate": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:deepslate"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.elementalia.first_quake.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "elementalia:earth_book"
+    },
+    "title": {
+      "translate": "advancements.elementalia.first_quake.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_deepslate"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
