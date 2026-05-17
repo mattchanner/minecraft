@@ -2,6 +2,7 @@ package com.example.elementalia;
 
 import com.example.elementalia.component.ModDataComponents;
 import com.example.elementalia.registry.ModCreativeTabs;
+import com.example.elementalia.registry.ModEntities;
 import com.example.elementalia.registry.ModItems;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -20,6 +21,7 @@ public class Elementalia {
         ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
+        ModEntities.register(modEventBus);
         LOGGER.info("Elementalia loading...");
     }
 }

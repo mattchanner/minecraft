@@ -12,17 +12,23 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+// Note: the beam shaft is now rendered by BookBeamRenderer via BookBeamEntity.
+// This class handles only the ground-crack and fire-eruption particles.
+
 /**
  * Client-side timed effect for a single Fire Book cast.
  * Created when the client receives a {@link BookCastPayload}; ticked by
  * {@link EffectManager} once per client tick until {@code done} is set.
  *
  * Visual storyboard (ticks):
- *  0     — ignition sound; beam starts
- *  0–9   — particle-stream beam marches toward impact
+ *  0     — ignition sound
  *  8–14  — ground crack particles; explosion sound on tick 8
  *  10–29 — ring of 8 fire jets; blaze sound on tick 10
  *  30    — effect ends
+ *
+ * The beam shaft is handled separately by {@link com.example.elementalia.client.render.BookBeamRenderer}
+ * via the {@link com.example.elementalia.entity.BookBeamEntity} that the server spawns alongside
+ * the payload.
  */
 public class BookCastEffect {
 
@@ -47,33 +53,11 @@ public class BookCastEffect {
                     SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0f, 0.8f, false);
         }
 
-        if (age < 10)               tickBeam(level);
         if (age >= 8 && age <= 14)  tickGroundCrack(level);
         if (age >= 10 && age < 30)  tickEruption(level);
 
         age++;
         if (age >= 30) done = true;
-    }
-
-    // --- beam ---------------------------------------------------------------
-
-    private void tickBeam(ClientLevel level) {
-        Vec3 dir      = impact.subtract(origin).normalize();
-        double dist   = origin.distanceTo(impact);
-        double front  = Math.min(dist, age * 4.0);
-
-        int step = 0;
-        for (double d = 0; d <= front; d += 0.3) {
-            Vec3 pos = origin.add(dir.scale(d));
-            double jx = random.nextGaussian() * 0.05;
-            double jy = random.nextGaussian() * 0.05;
-            double jz = random.nextGaussian() * 0.05;
-            level.addParticle(ParticleTypes.FLAME,   pos.x + jx, pos.y + jy, pos.z + jz, 0, 0, 0);
-            if (step % 3 == 0) {
-                level.addParticle(ParticleTypes.END_ROD, pos.x + jx, pos.y + jy, pos.z + jz, 0, 0, 0);
-            }
-            step++;
-        }
     }
 
     // --- ground crack -------------------------------------------------------

@@ -16,7 +16,7 @@ import java.util.List;
  * NeoGradle 7.1 uses the {@code clientData} run type (fires {@link GatherDataEvent.Client})
  * for all data generation — there is no separate {@code data} run type.
  */
-@EventBusSubscriber(modid = Elementalia.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Elementalia.MODID)
 public class DataGenerators {
 
     @SubscribeEvent
@@ -33,5 +33,9 @@ public class DataGenerators {
 
         // Client-side data: language
         event.addProvider(new ModLanguageProvider(output, Elementalia.MODID, "en_us"));
+
+        // Client-side data: items/*.json pointers (1.21.4 requirement — each item
+        // needs an assets/<ns>/items/<id>.json telling the renderer which model to use)
+        event.addProvider(new ModModelProvider(output));
     }
 }

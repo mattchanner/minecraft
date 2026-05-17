@@ -1,7 +1,9 @@
 package com.example.elementalia.item;
 
 import com.example.elementalia.component.ModDataComponents;
+import com.example.elementalia.entity.BookBeamEntity;
 import com.example.elementalia.network.BookCastPayload;
+import com.example.elementalia.registry.ModEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -112,9 +114,18 @@ public class FireBookItem extends Item {
         LOGGER.info("Fire Book cast: origin={} target={} distance={}",
                 origin, impact, origin.distanceTo(impact));
 
-        // Notify all watching clients so they can render the effect.
+        // Notify all watching clients so they can render the ground-crack and eruption effects.
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,
                 new BookCastPayload(origin, impact, level.random.nextInt()));
+
+        // Spawn the beam entity — vanilla entity tracking replicates it to clients so
+        // BookBeamRenderer draws the shaft.  Must be set before addFreshEntity so the
+        // initial spawn packet includes the correct end-point values.
+        BookBeamEntity beam = new BookBeamEntity(ModEntities.BOOK_BEAM.get(), level);
+        beam.setPos(origin);
+        beam.setEndPoint(impact);
+        beam.setLifetime(BookBeamEntity.DEFAULT_LIFETIME);
+        level.addFreshEntity(beam);
 
         // --- gameplay effects (server-only) ---
         applyEntityEffects(level, player, impact);
@@ -144,28 +155,43 @@ public class FireBookItem extends Item {
         }
     }
 
+    // Blocks within this radius of the impact become lava; beyond it, fire.
+    private static final double LAVA_RADIUS = 1.5;
+
     /**
-     * Ignites air blocks that sit above a flammable surface within the impact ring.
+     * Turns the ground to lava in the inner zone and ignites the outer ring.
      * Only called when the raytrace hit a block (not a mid-air miss).
+     *
+     * Inner zone (radius ≤ LAVA_RADIUS): the surface solid block is replaced
+     * with a lava source — the ground literally melts.
+     * Outer ring (LAVA_RADIUS < radius ≤ IMPACT_RADIUS): fire is placed above
+     * any flammable surface, as before.
      */
     private void igniteBlocks(ServerLevel level, Vec3 impact) {
-        double r2 = IMPACT_RADIUS * IMPACT_RADIUS;
+        double r2     = IMPACT_RADIUS * IMPACT_RADIUS;
+        double lavaR2 = LAVA_RADIUS * LAVA_RADIUS;
         BlockPos center = BlockPos.containing(impact);
 
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -3; dz <= 3; dz++) {
-                // Circular boundary check.
-                if (dx * dx + dz * dz > r2) continue;
+                double dist2 = dx * dx + dz * dz;
 
-                // Find the topmost motion-blocking position in this column.
+                // Circular boundary check.
+                if (dist2 > r2) continue;
+
                 BlockPos col     = center.offset(dx, 0, dz);
                 BlockPos surface = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, col);
                 BlockPos below   = surface.below();
 
-                // surface is the first air block above the solid surface.
-                if (level.getBlockState(surface).isAir()
-                        && level.getBlockState(below).isFlammable(level, below, Direction.UP)) {
-                    level.setBlockAndUpdate(surface, Blocks.FIRE.defaultBlockState());
+                if (dist2 <= lavaR2) {
+                    // Inner zone: replace the solid surface block with lava.
+                    level.setBlockAndUpdate(below, Blocks.LAVA.defaultBlockState());
+                } else {
+                    // Outer ring: place fire above flammable surfaces.
+                    if (level.getBlockState(surface).isAir()
+                            && level.getBlockState(below).isFlammable(level, below, Direction.UP)) {
+                        level.setBlockAndUpdate(surface, Blocks.FIRE.defaultBlockState());
+                    }
                 }
             }
         }
