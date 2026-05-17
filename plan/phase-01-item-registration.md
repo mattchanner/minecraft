@@ -10,40 +10,40 @@
 
 Establish the package structure we'll use for the rest of the mod. Inside `com.example.elementalia`:
 
-- [ ] `Elementalia.java` — mod main class (already exists from Phase 00).
-- [ ] `registry/ModItems.java` — `DeferredRegister<Item>` for all our items.
-- [ ] `registry/ModCreativeTabs.java` — `DeferredRegister` for our creative tab.
-- [ ] `item/FireBookItem.java` — the item class.
-- [ ] `client/` — empty for now, will hold client-only code in Phase 04.
+- [x] `Elementalia.java` — mod main class (already exists from Phase 00).
+- [x] `registry/ModItems.java` — `DeferredRegister<Item>` for all our items.
+- [x] `registry/ModCreativeTabs.java` — `DeferredRegister` for our creative tab.
+- [x] `item/FireBookItem.java` — the item class.
+- [x] `client/` — empty for now, will hold client-only code in Phase 04.
 
 ### ModItems
 
-- [ ] Create `ModItems` with a `DeferredRegister.Items` instance named after `Elementalia.MODID`.
-- [ ] Register a `Supplier<Item>` entry named `fire_book` returning a `new FireBookItem(new Item.Properties().stacksTo(1))`.
-- [ ] Add a `public static void register(IEventBus bus)` method that calls `ITEMS.register(bus)`.
+- [x] Create `ModItems` with a `DeferredRegister.Items` instance named after `Elementalia.MODID`.
+- [x] Register a `Supplier<Item>` entry named `fire_book` returning a `new FireBookItem(new Item.Properties().stacksTo(1))`.
+- [x] Add a `public static void register(IEventBus bus)` method that calls `ITEMS.register(bus)`.
 
 ### FireBookItem
 
-- [ ] Create `FireBookItem extends Item`.
-- [ ] Single constructor accepting `Item.Properties`.
-- [ ] No behavior yet — `use()` override comes in Phase 02. This phase is purely making the item exist.
+- [x] Create `FireBookItem extends Item`.
+- [x] Single constructor accepting `Item.Properties`.
+- [x] No behavior yet — `use()` override comes in Phase 02. This phase is purely making the item exist.
 
 ### Creative tab
 
-- [ ] Create `ModCreativeTabs` with a `DeferredRegister<CreativeModeTab>` for `Registries.CREATIVE_MODE_TAB`.
-- [ ] Register one tab `elementalia_tab`:
+- [x] Create `ModCreativeTabs` with a `DeferredRegister<CreativeModeTab>` for `Registries.CREATIVE_MODE_TAB`.
+- [x] Register one tab `elementalia_tab`:
   - Title: `Component.translatable("itemGroup.elementalia")`
   - Icon: `ModItems.FIRE_BOOK.get().getDefaultInstance()`
   - Contents: add `FIRE_BOOK` via `output.accept(...)`.
-- [ ] Add a `register(IEventBus bus)` method.
+- [x] Add a `register(IEventBus bus)` method.
 
 ### Wire registers into the mod main class
 
-- [ ] In `Elementalia` constructor, call `ModItems.register(modBus)` and `ModCreativeTabs.register(modBus)` using the `IEventBus` passed in.
+- [x] In `Elementalia` constructor, call `ModItems.register(modBus)` and `ModCreativeTabs.register(modBus)` using the `IEventBus` passed in.
 
 ### Assets — model
 
-- [ ] Create `src/main/resources/assets/elementalia/models/item/fire_book.json`:
+- [x] Create `src/main/resources/assets/elementalia/models/item/fire_book.json`:
   ```json
   {
     "parent": "minecraft:item/generated",
@@ -55,11 +55,11 @@ Establish the package structure we'll use for the rest of the mod. Inside `com.e
 
 ### Assets — texture
 
-- [ ] Create `src/main/resources/assets/elementalia/textures/item/fire_book.png` as a 16x16 placeholder. Any recognizable image is fine for now — we'll replace it later. A solid red square with a yellow border works.
+- [x] Create `src/main/resources/assets/elementalia/textures/item/fire_book.png` as a 16x16 placeholder. Any recognizable image is fine for now — we'll replace it later. A solid red square with a yellow border works.
 
 ### Assets — language file
 
-- [ ] Create `src/main/resources/assets/elementalia/lang/en_us.json`:
+- [x] Create `src/main/resources/assets/elementalia/lang/en_us.json`:
   ```json
   {
     "item.elementalia.fire_book": "Fire Book",
@@ -69,10 +69,10 @@ Establish the package structure we'll use for the rest of the mod. Inside `com.e
 
 ### Verify in-game
 
-- [ ] Run `./gradlew runClient`.
-- [ ] In a creative world, confirm the **Elementalia** tab is in the creative inventory.
-- [ ] Confirm the Fire Book appears in that tab with the placeholder texture and the name "Fire Book".
-- [ ] In a survival world, run `/give @s elementalia:fire_book`. Confirm the item appears in your inventory.
+- [x] Run `./gradlew runClient`.
+- [x] In a creative world, confirm the **Elementalia** tab is in the creative inventory.
+- [x] Confirm the Fire Book appears in that tab with the placeholder texture and the name "Fire Book".
+- [x] In a survival world, run `/give @s elementalia:fire_book`. Confirm the item appears in your inventory.
 - [ ] Run `./gradlew runServer`, join it from a separate client, and confirm `/give` works there too.
 
 ## Acceptance criteria

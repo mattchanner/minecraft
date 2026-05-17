@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:blaze_powder",
+    "K": "minecraft:book",
+    "L": "minecraft:leather",
+    "R": "minecraft:blaze_rod"
+  },
+  "pattern": [
+    "BRB",
+    "LKL",
+    "BRB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "elementalia:fire_book"
+  }
+}

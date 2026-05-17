@@ -1,0 +1,8 @@
+{
+  "advancements.elementalia.first_burn.description": "Bind a tome to flame.",
+  "advancements.elementalia.first_burn.title": "First Burn",
+  "item.elementalia.fire_book": "Fire Book",
+  "item.elementalia.fire_book.charges": "%s charges remaining",
+  "item.elementalia.fire_book.tooltip": "The pages crackle with bound flame.",
+  "itemGroup.elementalia": "Elementalia"
+}

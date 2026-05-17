@@ -8,53 +8,39 @@
 
 ### Damage entities
 
-In `FireBookItem.cast(...)`, after sending the network payload, before applying cooldown:
-
-- [ ] Build an `AABB` centered on `impact` with radius `IMPACT_RADIUS` on X and Z and 2.0 on Y.
-- [ ] Query `level.getEntitiesOfClass(LivingEntity.class, aabb, e -> e != player && e.isAlive())`.
-- [ ] For each entity:
-  - Apply damage: `entity.hurt(level.damageSources().onFire(), 6.0f)`. (Choosing the `onFire` source means existing fire resistance behaves correctly.)
-  - Set them on fire: `entity.setRemainingFireTicks(100)` (5 seconds).
-  - Apply knockback: compute horizontal direction from impact to entity, normalize, scale to 0.6, and call `entity.push(dx, 0.2, dz)`.
+- [x] Build an `AABB` centered on `impact` with radius `IMPACT_RADIUS` on X and Z and 2.0 on Y.
+- [x] Query `level.getEntitiesOfClass(LivingEntity.class, aabb, e -> e != player && e.isAlive())`.
+- [x] For each entity: apply `onFire` damage (6.0f), `igniteForSeconds(5.0f)`, push away from impact.
 
 ### Damage source — decide
 
-The `onFire` source treats the damage as fire damage, which interacts with fire resistance enchantments and the Fire Resistance potion. Good default.
-
-- [ ] Note here whether you want a custom damage source (e.g., attributed to the caster, like a player kill): ___________ (fill in after first playtest). For v1, `onFire` is fine.
+- [x] v1 decision: use `onFire` source (plain, no player attribution). Note: custom attributed source deferred to later phase.
 
 ### Ignite flammable blocks
 
-A simple but flavorful rule: every block in the impact ring that's air with a flammable block below becomes fire.
-
-- [ ] Loop over a 7×7 column centered on impact (Y at impact level, ±3 in X and Z).
-- [ ] For each `(x, z)`:
-  - Find the topmost solid block at that column near `impact.y` (use `level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, ...)` for robustness).
-  - If the block above is air and the top block's `BlockState.isFlammable(level, pos, Direction.UP)` returns true, call `level.setBlockAndUpdate(airPos, Blocks.FIRE.defaultBlockState())`.
-- [ ] Skip positions outside `IMPACT_RADIUS` (use circular distance check, not square).
+- [x] Loop over 7×7 column centered on impact (±3 X and Z).
+- [x] For each (x, z): use `getHeightmapPos(MOTION_BLOCKING, col)` to find the surface air block. If the block below is flammable (`Direction.UP`), set fire.
+- [x] Skip positions outside `IMPACT_RADIUS` with circular distance check.
 
 ### Respect protection
 
-- [ ] Wrap the block-modification loop in a check: if the level is a `ServerLevel`, call `EventHooks.canEntityGrief` or check the `mobGriefing` rule. (Use `level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)`.) For player-caused effects, mob griefing isn't quite the right gate — but adding a configurable toggle is overkill for v1. For now:
-- [ ] **Decision for v1:** always ignite, ignore mob griefing. Note here if changed: ___________.
+- [x] v1 decision: always ignite, no mob griefing gate (deferred to Phase 06 config).
 
 ### Particle-only mid-air casts
 
-If the player casts at the sky (no block hit), the impact point is mid-air. Damage and knockback still make sense; fire-ignition does not.
-
-- [ ] Track whether the raytrace returned `Type.MISS`. If so, skip the ignition loop entirely.
-- [ ] Damage and knockback still apply (a beam still hits whatever's in the air at the impact point).
+- [x] Track `hitBlock = hitResult.getType() != MISS`. Skip ignition loop if `!hitBlock`.
+- [x] Damage and knockback still apply regardless.
 
 ### Verify in-game
 
-- [ ] Spawn a cow and a zombie 10 blocks ahead. Cast at the ground in front of them.
+- [x] Spawn a cow and a zombie 10 blocks ahead. Cast at the ground in front of them.
   - Both should take damage and catch fire.
   - Both should be pushed away from the impact.
-- [ ] Cast at a wood plank floor. Confirm fire blocks appear on the affected tiles.
-- [ ] Cast at a stone floor. Confirm no fire (stone isn't flammable).
-- [ ] Cast at yourself: damage should be skipped for the caster (`e != player` filter).
-- [ ] Cast at peaceful difficulty: confirm hostile mobs are pushed but not damaged (vanilla behavior — peaceful zeros damage to players, not from players).
-- [ ] On dedicated server, confirm fire ignition replicates to all viewers.
+- [x] Cast at a wood plank floor. Confirm fire blocks appear on the affected tiles.
+- [x] Cast at a stone floor. Confirm no fire (stone isn't flammable).
+- [x] Cast at yourself: damage should be skipped for the caster (`e != player` filter).
+- [x] Cast at peaceful difficulty: confirm hostile mobs are pushed but not damaged (vanilla behavior — peaceful zeros damage to players, not from players).
+- [x] On dedicated server, confirm fire ignition replicates to all viewers.
 
 ## Acceptance criteria
 
@@ -69,4 +55,4 @@ If the player casts at the sky (no block hit), the impact point is mid-air. Dama
 - Don't call `level.setBlockAndUpdate` from the client side. This whole phase's logic lives in the server branch of `use()` — verify by checking that `level instanceof ServerLevel` before any block mutation.
 - Fire blocks need a supporting block below them or they immediately extinguish. The "air above flammable" check handles this.
 - If you find that damage feels too high or too low after playtesting, tune the `6.0f` value here rather than introducing config files. Config is a Phase 06 concern.
-- `EXPLOSION` damage with `Level.ExplosionInteraction.NONE` is an alternative for the area effect, but doing it manually gives you finer control over knockback and fire — recommended for our case.
+- **1.21.4 note:** `igniteForSeconds(float)` is preferred over `setRemainingFireTicks(int)` — it's the newer API.

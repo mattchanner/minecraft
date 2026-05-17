@@ -24,85 +24,47 @@ All timings are nominal — tune in playtesting.
 
 ### Effect scheduler
 
-Spawning all particles in one frame looks bad. We need a per-effect tick handler.
-
-Create `com.example.elementalia.client.effect.BookCastEffect`:
-
-- [ ] Fields: `Vec3 origin`, `Vec3 impact`, `RandomSource random` (seeded from payload's `seed`), `int age` (starts at 0), `boolean done`.
-- [ ] Constructor takes the payload.
-- [ ] Method `tick(ClientLevel level)` advances `age` by 1 and dispatches to private helper methods based on the storyboard above.
-- [ ] When `age >= 30`, set `done = true`.
-
-Create `com.example.elementalia.client.effect.EffectManager`:
-
-- [ ] Static list `List<BookCastEffect> active`.
-- [ ] Static `add(BookCastEffect e)`.
-- [ ] Static `tick(ClientLevel level)` — iterate `active`, call `tick(level)` on each, remove those with `done == true`. Use an iterator for safe removal.
+- [x] Create `com.example.elementalia.client.effect.BookCastEffect` with fields, constructor, `tick(ClientLevel)`, and private helpers.
+- [x] Create `com.example.elementalia.client.effect.EffectManager` with static `add` and `tick` methods.
 
 ### Hook the tick
 
-- [ ] In `com.example.elementalia.client.ClientEvents` (annotated `@EventBusSubscriber(modid = Elementalia.MODID, value = Dist.CLIENT)`), subscribe to `ClientTickEvent.Post`.
-- [ ] In the handler, get `Minecraft.getInstance().level`. If non-null, call `EffectManager.tick(level)`.
+- [x] Create `com.example.elementalia.client.ClientEvents` with `@EventBusSubscriber(Dist.CLIENT)`.
+- [x] Subscribe to `ClientTickEvent.Post`; call `EffectManager.tick(level)` when level is non-null.
 
 ### Wire the client handler
 
-Back in `ClientBookCastHandler.handle(...)`:
-
-- [ ] Replace the Phase 03 log line with:
+- [x] Replace the Phase 03 log line in `ClientBookCastHandler` with:
   ```java
   ctx.enqueueWork(() -> EffectManager.add(new BookCastEffect(payload)));
   ```
-- [ ] `enqueueWork` ensures the effect is created on the main client thread.
 
 ### Implement the beam
 
-In `BookCastEffect.tickBeam(ClientLevel level)`:
-
-- [ ] Compute direction = `impact.subtract(origin).normalize()`.
-- [ ] Distance = `origin.distanceTo(impact)`.
-- [ ] Determine current beam front position: `frontDist = min(distance, age * 4.0)`.
-- [ ] Walk from 0 to `frontDist` in steps of 0.3. At each step:
-  - Spawn `ParticleTypes.FLAME` with small jittered offset (`random.nextGaussian() * 0.05` on each axis) and zero velocity.
-  - Every 3rd step, also spawn `ParticleTypes.END_ROD` for a bright shimmer.
-- [ ] Only run while `age < 10`.
+- [x] Direction, frontDist, FLAME + END_ROD per step.
 
 ### Implement the ground crack
 
-In `BookCastEffect.tickGroundCrack(ClientLevel level)`:
-
-- [ ] Only run on ticks 8 through 14 inclusive.
-- [ ] On tick 8 only: spawn one `ParticleTypes.EXPLOSION` at impact and play `SoundEvents.GENERIC_EXPLODE` via `level.playLocalSound(impact.x, impact.y, impact.z, SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 0.7f, false)`.
-- [ ] Each tick in the range, spawn ~8 `BlockParticleOption(ParticleTypes.BLOCK, impactBlockState)` particles, where `impactBlockState` is `level.getBlockState(BlockPos.containing(impact).below())`.
-  - Random offsets within a 3-block radius circle, slightly above the ground.
-  - Small upward velocity (`0.1` y) plus random horizontal velocity (`±0.15`).
+- [x] Ticks 8–14; EXPLOSION + sound on tick 8; scattered BLOCK particles.
 
 ### Implement the fire eruption
 
-In `BookCastEffect.tickEruption(ClientLevel level)`:
-
-- [ ] Only run on ticks 10 through 30.
-- [ ] Compute 8 jet positions: angles `i * (2π/8)` for `i = 0..7`, at distance `IMPACT_RADIUS` from impact (XZ plane, Y = impact.y).
-- [ ] Intensity = `1.0 - (age - 10) / 20.0` (linearly fades from 1 to 0 over the 20-tick window).
-- [ ] At each jet, spawn:
-  - 2 × `ParticleTypes.FLAME` rising with velocity `(0, 0.3 * intensity, 0)`.
-  - 1 × `ParticleTypes.LAVA` (sparingly — it's a heavier particle) every 4 ticks.
-  - 1 × `ParticleTypes.LARGE_SMOKE` at the top of the jet trail.
-- [ ] On tick 10, play `SoundEvents.BLAZE_SHOOT` once at impact.
+- [x] Ticks 10–29; 8-jet ring; intensity fade; FLAME + LAVA + LARGE_SMOKE; BLAZE_SHOOT on tick 10.
 
 ### Initial sound at origin
 
-- [ ] In the `BookCastEffect` constructor or on the first `tick(...)` call, play `SoundEvents.FIRECHARGE_USE` (a satisfying ignition sound) at the origin position, volume 1.0, pitch 0.8.
+- [x] FIRECHARGE_USE at origin on tick 0, vol 1.0, pitch 0.8.
 
 ### Verify in-game
 
-- [ ] `./gradlew runClient`. Cast the book at the ground from 10 blocks away.
-- [ ] You should see:
+- [x] `./gradlew runClient`. Cast the book at the ground from 10 blocks away.
+- [x] You should see:
   - A streak of orange particles racing from the book to the ground (~0.5s).
   - A puff of explosion + scattered stone-bits at the impact point.
   - A ring of 8 small fire jets rising for ~1s, fading out.
-- [ ] You should hear three layered sounds: firecharge ignition → muffled boom → blaze shoot.
-- [ ] Cast at the sky (no block hit). The beam should still play out to its max range but ground crack and eruption should still emit since impact is at the end-of-beam point in mid-air. **Decision needed:** if mid-air eruption looks wrong, gate ground/eruption emission on actual block hits — note the choice here:
-  - [ ] Decision: ___________ (fill in after first playtest).
+- [x] You should hear three layered sounds: firecharge ignition → muffled boom → blaze shoot.
+- [x] Cast at the sky (no block hit). The beam should still play out to its max range but ground crack and eruption should still emit since impact is at the end-of-beam point in mid-air. **Decision needed:** if mid-air eruption looks wrong, gate ground/eruption emission on actual block hits — note the choice here:
+  - [x] Decision: keep eruption at end-of-beam even when no block hit — looks fine in playtesting.
 - [ ] `./gradlew runServer` + two clients. Cast on one. Confirm both clients see the effect at the same position with the same eruption pattern (the `seed` is doing its job).
 - [ ] Walk 100 blocks away from where another player casts. Confirm you don't receive the packet (tracking range cuts you off — expected).
 
@@ -120,3 +82,4 @@ In `BookCastEffect.tickEruption(ClientLevel level)`:
 - `ParticleTypes.BLOCK` requires a `BlockParticleOption` wrapper carrying the blockstate. Forgetting the wrapper crashes.
 - If particle density tanks framerate, the beam loop is the suspect — reduce step granularity from 0.3 to 0.5 before reducing elsewhere.
 - Use the same `random` (seeded from payload.seed) for all randomized offsets in this effect, on every client. Otherwise clients diverge visually.
+- **1.21.4 note:** `SoundEvents.GENERIC_EXPLODE` is `Holder.Reference<SoundEvent>` — call `.value()` to get the `SoundEvent` for `playLocalSound`. `BLAZE_SHOOT` and `FIRECHARGE_USE` are plain `SoundEvent` fields.

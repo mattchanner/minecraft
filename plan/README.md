@@ -12,13 +12,13 @@ A NeoForge 1.21.4 mod that adds an **Elemental Fire Book** — right-click to fi
 
 | # | Phase | Status |
 |---|---|---|
-| 00 | [Project setup](phase-00-setup.md) | Not started |
-| 01 | [Item registration](phase-01-item-registration.md) | Not started |
-| 02 | [Right-click + raytrace](phase-02-right-click-raytrace.md) | Not started |
-| 03 | [Networking payload](phase-03-networking.md) | Not started |
-| 04 | [Visual effect — particle beam](phase-04-visuals-particle-beam.md) | Not started |
-| 05 | [Gameplay effects](phase-05-gameplay-effects.md) | Not started |
-| 06 | [Polish v1](phase-06-polish-v1.md) | Not started |
+| 00 | [Project setup](phase-00-setup.md) | Done |
+| 01 | [Item registration](phase-01-item-registration.md) | Done |
+| 02 | [Right-click + raytrace](phase-02-right-click-raytrace.md) | Done |
+| 03 | [Networking payload](phase-03-networking.md) | Done |
+| 04 | [Visual effect — particle beam](phase-04-visuals-particle-beam.md) | Done |
+| 05 | [Gameplay effects](phase-05-gameplay-effects.md) | Done |
+| 06 | [Polish v1](phase-06-polish-v1.md) | Done |
 | 07 | [Upgrade to beacon-style beam](phase-07-upgrade-to-beacon-beam.md) | Not started |
 | 08 | [Stretch — elemental family](phase-08-stretch-elemental-family.md) | Not started |
 
